@@ -1,17 +1,17 @@
 {
-  "name": "tool-mst",
-  "version": "1.0.0",
-  "description": "tool",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "ducvd3",
-  "license": "ISC",
-  "dependencies": {
-    "express": "^4.16.3",
-    "image-downloader": "^3.4.1",
-    "jsonfile": "^4.0.0",
-    "puppeteer": "^1.4.0"
-  }
+    "name": "beautifull-cong",
+    "version": "1.0.0",
+    "description": "tool",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "ducdk",
+    "license": "ISC",
+    "dependencies": {
+        "express": "^4.16.3",
+        "image-downloader": "^3.4.1",
+        "jsonfile": "^4.0.0",
+        "puppeteer": "^1.4.0"
+    }
 }
