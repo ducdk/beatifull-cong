@@ -56,8 +56,6 @@ app.get('/articles/:id/:slug/result', function(req, res) {
 
     let slug = "";
     let id = -1;
-    let page = 1;
-    let offset = 20;
     if (req.params.slug && req.params.id) {
         slug = req.params.slug;
         id = req.params.id;
@@ -74,15 +72,17 @@ app.get('/articles/:id/:slug/result', function(req, res) {
     // if (page * offset > length && (page - 1) * offset > length)
     //     res.send({});
     // let run = page * offset > length ? length : page * offset;
-    let dat = {};
+    let dat = [];
+    // console.dir(arr);
     for (let i = 0; i < arr.length; i++) {
-        let a = arr[i];
+        let a = {};
         a['link'] = arr[i];
-        arr.push(a);
+        dat.push(a);
     }
 
+    // console.log(dat);
     // res.render('article', arr);
-    res.send(arr);
+    res.send(dat);
 })
 
 // app.get('/home', function(req, res) {

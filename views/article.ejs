@@ -8,8 +8,8 @@
     <title>Beautiful Cong</title>
     <meta name="description" content="Mrcong clone data images ">
     <meta name="author" content="Đk">
-    <link rel="stylesheet" href="src/boardz.css">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="/src/boardz.css">
+    <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/wingcss/0.1.8/wing.min.css">
     <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
 
@@ -96,6 +96,8 @@
 
         $grid.infiniteScroll({
             path: function() {
+                // var t = window.location.href.split('/');
+                // console.log(t);
                 return window.location.href + "/result?page=" + this.pageIndex;
             },
             // load response as flat text
