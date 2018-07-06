@@ -3,6 +3,7 @@ const jsonfile = require('jsonfile');
 const app = express()
 
 const FILE_OUTPUT = __dirname + '/result.json';
+var port = process.env.PORT || 8080;
 
 app.set('view engine', 'ejs');
 
@@ -89,4 +90,4 @@ app.get('/articles/:id/:slug/result', function(req, res) {
 //     res.send('hello world')
 // })
 
-app.listen(3000, () => console.log('Server app listening on port 3000!'));
+app.listen(port, () => console.log('Server app listening on port:' + port));
