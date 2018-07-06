@@ -1,0 +1,144 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <title>Beautiful Cong</title>
+    <meta name="description" content="Mrcong clone data images ">
+    <meta name="author" content="Đk">
+    <link rel="stylesheet" href="src/boardz.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/wingcss/0.1.8/wing.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
+
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.js"></script>
+    <script src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
+    <script src="https://unpkg.com/infinite-scroll@3/dist/infinite-scroll.pkgd.min.js"></script>
+</head>
+
+<body>
+    <div class="seventyfive-percent  centered-block">
+        <!-- Sample code block -->
+        <div>
+
+            <!-- Example header and explanation -->
+            <div class="text-center">
+                <h2>Beautifull <strong>Cong</strong></h2>
+                <p><strong>Beautifull Cong</strong> website chia sẻ những điều thú vị, câu chuyện hay ho và đặc biệt là đăng tải những bức ảnh người đẹp, hình nền máy tính với chất lượng cao hoàn toàn miễn phí!</p>
+            </div>
+
+            <hr class="seperator fifty-percent">
+
+            <!-- Example Boardz element. -->
+            <!-- <div class="boardz centered-block beautiful"> -->
+            <div class="grid">
+                <div class="grid__col-sizer"></div>
+                <div class="grid__gutter-sizer"></div>
+            </div>
+
+            <div class="page-load-status">
+                <div class="loader-ellips infinite-scroll-request">
+                    <span class="loader-ellips__dot"></span>
+                    <span class="loader-ellips__dot"></span>
+                    <span class="loader-ellips__dot"></span>
+                    <span class="loader-ellips__dot"></span>
+                </div>
+                <p class="infinite-scroll-last">End of content</p>
+                <p class="infinite-scroll-error">No more pages to load</p>
+            </div>
+
+
+            <!-- .photo-item template HTML -->
+            <script type="text/html" id="photo-item-template">
+                <div class="photo-item">
+                    <img class="photo-item__image" src="{{thumbnail}}" alt="Photo by {{title}}" />
+                    <p class="photo-item__caption">
+                        <a href="/articles/{{offset}}/{{slug}}">{{title}}</a>
+                    </p>
+                </div>
+            </script>
+            <!-- </div> -->
+        </div>
+        <hr class="seperator">
+
+        <div class="footer">
+            <p>Developed with ❤ by <a href="https://github.com/ducdk">Đk</a>.</p>
+        </div>
+
+    </div>
+
+    <script>
+        var $grid = $('.grid').masonry({
+            itemSelector: '.photo-item',
+            columnWidth: '.grid__col-sizer',
+            gutter: '.grid__gutter-sizer',
+            percentPosition: true,
+            stagger: 30,
+            // nicer reveal transition
+            visibleStyle: {
+                transform: 'translateY(0)',
+                opacity: 1
+            },
+            hiddenStyle: {
+                transform: 'translateY(100px)',
+                opacity: 0
+            },
+        });
+
+        // get Masonry instance
+        var msnry = $grid.data('masonry');
+
+        $grid.infiniteScroll({
+            path: function() {
+                return '/result?page=' + this.pageIndex;
+            },
+            // load response as flat text
+            responseType: 'text',
+            outlayer: msnry,
+            status: '.page-load-status',
+            history: false,
+        });
+
+        $grid.on('load.infiniteScroll', function(event, response) {
+            // console.log(response)
+            // parse response into JSON data
+            var data = JSON.parse(response);
+            // compile data into HTML
+            var itemsHTML = data.map(getItemHTML).join('');
+            // convert HTML string into elements
+            var $items = $(itemsHTML);
+            // append item elements
+            $items.imagesLoaded(function() {
+                $grid.infiniteScroll('appendItems', $items)
+                    .masonry('appended', $items);
+            })
+        });
+
+        // load initial page
+        $grid.infiniteScroll('loadNextPage');
+
+        var itemTemplateSrc = $('#photo-item-template').html();
+
+        function getItemHTML(photo) {
+            return microTemplate(itemTemplateSrc, photo);
+        }
+
+        // micro templating, sort-of
+        function microTemplate(src, data) {
+            // replace {{tags}} in source
+            return src.replace(/\{\{([\w\-_\.]+)\}\}/gi, function(match, key) {
+                // walk through objects to get value
+                var value = data;
+                key.split('.').forEach(function(part) {
+                    value = value[part];
+                });
+                return value;
+            });
+        }
+    </script>
+</body>
+
+</html>

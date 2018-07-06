@@ -56,9 +56,9 @@ const FILE_OUTPUT = __dirname + '/result.json';
                 arr.push(articles[j]);
         }
         run = i;
-        // if (i >= 10) {
-        //     break;
-        // }
+        if (i >= 50) {
+            break;
+        }
     }
 
     let data = {
@@ -69,46 +69,58 @@ const FILE_OUTPUT = __dirname + '/result.json';
     // console.dir(articles);
     try {
         await jsonfile.writeFileSync(FILE_INPUT, data);
-        let updateData = jsonfile.readFileSync(FILE_OUTPUT);
-        await jsonfile.writeFileSync(FILE_OUTPUT, { 'data': arr });
+        // let updateData = jsonfile.readFileSync(FILE_OUTPUT);
+        // await jsonfile.writeFileSync(FILE_OUTPUT, { 'data': arr });
     } catch (err) {
         console.dir(err);
     }
 
-
+    // console.log(arr);
     //get link anh
-    // try {
-    //     let artiArray = articles
-    //     for (let i = end; i <= run; i++) {
-    //         for (let j = 0; j <= artiArray['page' + i].length - 10; j++) {
-    //             // link articles
-    //             let urlArticles = artiArray['page' + i][j]['url'];
-    //             await page.goto(urlArticles);
-    //             // page size
-    //             let pageSize = await page.evaluate(() => {
-    //                 let t = document.querySelectorAll('#fukie2 > div:nth-child(2) > a');
-    //                 t = [...t];
-    //                 return t.length;
-    //             });
-    //             // get link image
-    //             for (let k = 1; k <= pageSize; k++) {
-    //                 await page.goto(urlArticles + k);
-    //                 artiArray['page' + i][j]['link_image' + k] = await page.evaluate(() => {
-    //                     let img = document.querySelectorAll('#fukie2 > p:nth-child(5) > img');
-    //                     img = [...img];
-    //                     let linkImg = img.map(link => ({
-    //                         thumbnail: link.getAttribute('src'),
-    //                     }));
-    //                     return linkImg;
-    //                 });
-    //             }
-    //         }
-    //     }
-    //     // save file
-    //     await jsonfile.writeFileSync(FILE_OUTPUT, artiArray);
-    // } catch (err) {
-    //     console.dir(err);
-    // }
+    try {
+        let artiArray = arr;
+        // console.log(artiArray);
+        // for (let i = end; i <= run; i++) {
+        for (let j = 0; j < artiArray.length; j++) {
+            // link articles
+            let urlArticles = artiArray[j]['url'];
+            await page.goto(urlArticles);
+            // page size
+            let pageSize = await page.evaluate(() => {
+                let t = document.querySelectorAll('#fukie2 > div:nth-child(2) > a');
+                t = [...t];
+                return t.length;
+            });
+            // console.log(pageSize);
+            // get link image
+
+            let limg = [];
+            for (let k = 1; k <= pageSize; k++) {
+                await page.goto(urlArticles + k);
+                link_image = await page.evaluate(() => {
+                    let img = document.querySelectorAll('#fukie2 > p > img');
+                    img = [...img];
+                    let linkImg = img.map(link => ({
+                        thumbnail: link.getAttribute('src'),
+                    }));
+                    return linkImg;
+                });
+                // console.log(link_image);
+                for (let x = 0; x < link_image.length; x++) {
+                    // console.log(x + " " + link_image[x]['thumbnail']);
+                    // if (link_image[x] != null || link_image[x] != undefined)
+                    limg.push(link_image[x]['thumbnail']);
+                }
+                console.log(j);
+            }
+            artiArray[j]['link_image'] = limg;
+        }
+        // }
+        // save file
+        await jsonfile.writeFileSync(FILE_OUTPUT, { 'data': artiArray });
+    } catch (err) {
+        console.dir(err);
+    }
 
     console.log('Done !!!');
     await browser.close();
