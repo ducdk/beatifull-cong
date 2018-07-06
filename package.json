@@ -14,5 +14,8 @@
         "image-downloader": "^3.4.1",
         "jsonfile": "^4.0.0",
         "puppeteer": "^1.4.0"
+    },
+    "engines": {
+        "node": "8.9.3"
     }
 }
